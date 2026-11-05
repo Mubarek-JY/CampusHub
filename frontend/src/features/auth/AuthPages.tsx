@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, Users } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import type { ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { Field } from '../../components/ui/Field';
 import { useToast } from '../../hooks/useToast';
 import { ApiError } from '../../lib/api/client';
 import { useAuth } from './AuthContext';
+import { Logo } from '../../components/branding/Logo';
 
 const loginSchema = z.object({ email: z.string().email('Enter a valid email address.'), password: z.string().min(1, 'Password is required.') });
 type LoginValues = z.infer<typeof loginSchema>;
@@ -24,7 +25,7 @@ const registerSchema = z.object({
 type RegisterValues = z.infer<typeof registerSchema>;
 
 function AuthShell({ children, title, subtitle, footer }: { children: ReactNode; title: string; subtitle: string; footer: ReactNode }) {
-  return <div className="flex min-h-screen items-center justify-center bg-[#f7f8fc] px-4 py-10 dark:bg-[#090f1d]"><div className="w-full max-w-[460px]"><div className="mb-7 flex items-center justify-center gap-3"><span className="flex size-11 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/20"><Users className="size-5" /></span><span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">CampusHub</span></div><Card className="p-6 sm:p-8"><div className="mb-7"><h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{title}</h1><p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{subtitle}</p></div>{children}</Card><p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">{footer}</p></div></div>;
+  return <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f4f7fb] px-4 py-10 dark:bg-[#080d18]"><div className="pointer-events-none absolute -left-32 -top-32 size-96 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-900/20" /><div className="pointer-events-none absolute -bottom-40 -right-24 size-[28rem] rounded-full bg-indigo-200/30 blur-3xl dark:bg-indigo-900/15" /><div className="relative w-full max-w-[460px]"><div className="mb-7 flex justify-center"><Logo href="/login" /></div><Card className="border-white/80 p-6 shadow-[0_24px_70px_-35px_rgba(15,23,42,.35)] sm:p-8"><div className="mb-7"><h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{title}</h1><p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{subtitle}</p></div>{children}</Card><p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">{footer}</p></div></div>;
 }
 
 export function LoginPage() {

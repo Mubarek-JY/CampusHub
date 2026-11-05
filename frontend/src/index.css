@@ -5,7 +5,12 @@
 :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color-scheme: light; font-synthesis: none; text-rendering: optimizeLegibility; }
 :root.dark { color-scheme: dark; }
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: #f7f8fc; }
-.dark body { background: #090f1d; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f4f7fb; }
+.dark body { background: #080d18; }
 button, input, textarea, select { font: inherit; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+::placeholder { color: #94a3b8; }
+input[type='checkbox'], input[type='radio'] { accent-color: #2563eb; }
+.app-shell { background-image: radial-gradient(circle at 75% -10%, rgba(59, 130, 246, .10), transparent 34rem); }
+.dark .app-shell { background-image: radial-gradient(circle at 75% -10%, rgba(37, 99, 235, .15), transparent 34rem); }
 ::selection { background: #bfdbfe; color: #172554; }

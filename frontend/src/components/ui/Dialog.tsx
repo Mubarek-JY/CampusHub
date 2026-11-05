@@ -35,8 +35,8 @@ export function Dialog({ open, onClose, title, children, className = '' }: { ope
     };
   }, [open]);
   if (!open) return null;
-  return <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/45 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-    <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabIndex={-1} className={`my-auto w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl outline-none dark:border-slate-700 dark:bg-slate-900 ${className}`}>
+  return <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabIndex={-1} className={`my-auto w-full max-w-lg rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl outline-none dark:border-slate-700 dark:bg-slate-900 ${className}`}>
       <div className="mb-5 flex items-center justify-between gap-3"><h2 id="dialog-title" className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h2><button aria-label="Close dialog" onClick={onClose} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:hover:bg-slate-800"><X className="size-4" /></button></div>
       {children}
     </section>
