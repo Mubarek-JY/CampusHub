@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { requireAuth } from "../../middleware/auth.js";
+import { validate } from "../../middleware/validate.js";
+import * as controller from "./calendar.controller.js";
+import { createEventSchema, eventParams, listEventsQuery, updateEventSchema } from "./calendar.schemas.js";
+export const calendarRouter = Router();
+calendarRouter.use(requireAuth);
+calendarRouter.get("/", validate({ query: listEventsQuery }), controller.list);
+calendarRouter.post("/", validate({ body: createEventSchema }), controller.create);
+calendarRouter.patch("/:eventId", validate({ params: eventParams, body: updateEventSchema }), controller.update);
+calendarRouter.delete("/:eventId", validate({ params: eventParams }), controller.remove);

@@ -1,0 +1,236 @@
+// CampusHub database schema
+// Feature areas: auth & profiles, groups & collaboration, resource sharing,
+// messaging, calendar.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────── Enums ─────────────
+
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ResourceType {
+  LINK
+  FILE
+  NOTE
+}
+
+enum EventType {
+  CLASS
+  EXAM
+  DEADLINE
+  STUDY_SESSION
+  MEETING
+  OTHER
+}
+
+// ───────────── Auth & profiles ─────────────
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole @default(STUDENT)
+
+  university  String?
+  department  String?
+  yearOfStudy Int?
+  bio         String?
+  avatarUrl   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens   RefreshToken[]
+  ownedGroups     Group[]          @relation("GroupOwner")
+  memberships     GroupMember[]
+  createdTasks    GroupTask[]      @relation("TaskCreator")
+  assignedTasks   GroupTask[]      @relation("TaskAssignee")
+  resources       Resource[]
+  resourceRatings ResourceRating[]
+  sentMessages    Message[]        @relation("MessageSender")
+  receivedDMs     Message[]        @relation("MessageRecipient")
+  events          CalendarEvent[]
+
+  @@index([university, department])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ───────────── Groups & collaboration ─────────────
+
+model Group {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  courseName  String?
+  joinCode    String   @unique
+  ownerId     String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner     User            @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  members   GroupMember[]
+  tasks     GroupTask[]
+  resources Resource[]
+  messages  Message[]
+  events    CalendarEvent[]
+
+  @@index([ownerId])
+}
+
+model GroupMember {
+  id       String    @id @default(uuid()) @db.Uuid
+  groupId  String    @db.Uuid
+  userId   String    @db.Uuid
+  role     GroupRole @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId])
+}
+
+model GroupTask {
+  id          String       @id @default(uuid()) @db.Uuid
+  groupId     String       @db.Uuid
+  title       String
+  description String?
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  assigneeId  String?      @db.Uuid
+  createdById String       @db.Uuid
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  group     Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  assignee  User? @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdBy User  @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([groupId, status])
+  @@index([assigneeId])
+}
+
+// ───────────── Resource sharing ─────────────
+
+model Resource {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String
+  description String?
+  type        ResourceType
+  url         String?
+  content     String?
+  courseName  String?
+  tags        String[]
+  isPublic    Boolean      @default(true)
+  uploaderId  String       @db.Uuid
+  groupId     String?      @db.Uuid
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  uploader User             @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  group    Group?           @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  ratings  ResourceRating[]
+
+  @@index([courseName])
+  @@index([uploaderId])
+  @@index([groupId])
+}
+
+model ResourceRating {
+  id         String   @id @default(uuid()) @db.Uuid
+  resourceId String   @db.Uuid
+  userId     String   @db.Uuid
+  value      Int // 1..5, enforced in the API layer
+  createdAt  DateTime @default(now())
+
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, userId])
+}
+
+// ───────────── Messaging ─────────────
+// A message targets either a group chat (groupId) or a direct message (recipientId).
+// The "exactly one" rule is enforced in the service layer.
+
+model Message {
+  id          String   @id @default(uuid()) @db.Uuid
+  content     String
+  senderId    String   @db.Uuid
+  groupId     String?  @db.Uuid
+  recipientId String?  @db.Uuid
+  createdAt   DateTime @default(now())
+
+  sender    User   @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient User?  @relation("MessageRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  group     Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId, createdAt])
+  @@index([senderId, recipientId, createdAt])
+}
+
+// ───────────── Calendar ─────────────
+
+model CalendarEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String
+  description String?
+  type        EventType @default(OTHER)
+  startsAt    DateTime
+  endsAt      DateTime?
+  location    String?
+  ownerId     String    @db.Uuid
+  groupId     String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  owner User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  group Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId, startsAt])
+  @@index([groupId, startsAt])
+}

@@ -1,0 +1,15 @@
+import { Router } from "express";
+import { requireAuth } from "../../middleware/auth.js";
+import { validate } from "../../middleware/validate.js";
+import * as controller from "./auth.controller.js";
+import { loginSchema, refreshSchema, registerSchema, updateProfileSchema } from "./auth.schemas.js";
+
+export const authRouter = Router();
+
+authRouter.post("/register", validate({ body: registerSchema }), controller.register);
+authRouter.post("/login", validate({ body: loginSchema }), controller.login);
+authRouter.post("/refresh", validate({ body: refreshSchema }), controller.refresh);
+authRouter.post("/logout", validate({ body: refreshSchema }), controller.logout);
+
+authRouter.get("/me", requireAuth, controller.me);
+authRouter.patch("/me", requireAuth, validate({ body: updateProfileSchema }), controller.updateMe);

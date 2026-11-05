@@ -1,0 +1,24 @@
+# Dependencies
+backend/node_modules/
+frontend/node_modules/
+
+# Build output
+backend/dist/
+frontend/dist/
+
+# Environment files
+backend/.env
+frontend/.env
+!.env.example
+
+# Generated code
+backend/src/generated/
+
+# Test and tool output
+backend/coverage/
+frontend/coverage/
+*.tsbuildinfo
+*.log
+
+# Local uploads
+backend/uploads/
