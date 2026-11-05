@@ -1,10 +1,9 @@
-import { BookOpen, CalendarDays, LayoutDashboard, MessageSquare } from 'lucide-react';
+import { CalendarDays, LayoutDashboard, MessageSquare } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { Logo } from '../branding/Logo';
 
 const links = [
-  { to: '/app', label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/app/resources', label: 'Resources', icon: BookOpen },
+  { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/app/messages', label: 'Messages', icon: MessageSquare },
   { to: '/app/calendar', label: 'Calendar', icon: CalendarDays },
 ];

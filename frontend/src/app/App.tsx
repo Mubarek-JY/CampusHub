@@ -5,7 +5,6 @@ import { LoginPage, RegisterPage } from '../features/auth/AuthPages';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { GroupPage } from '../features/groups/GroupPage';
 import { ProfilePage } from '../features/profile/ProfilePage';
-import { ResourcesPage } from '../features/resources/ResourcesPage';
 import { MessagesPage } from '../features/messages/MessagesPage';
 import { CalendarPage } from '../features/calendar/CalendarPage';
 import { NotFound } from './NotFound';
@@ -20,7 +19,6 @@ export function App() {
       <Route index element={<DashboardPage />} />
       <Route path="groups/:groupId" element={<GroupPage />} />
       <Route path="profile" element={<ProfilePage />} />
-      <Route path="resources" element={<ResourcesPage />} />
       <Route path="messages" element={<MessagesPage />} />
       <Route path="calendar" element={<CalendarPage />} />
     </Route></Route>

@@ -14,7 +14,7 @@ export const createResourceSchema = z
     courseName: z.string().trim().max(120).optional(),
     tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
     isPublic: z.boolean().default(true),
-    groupId: z.uuid().optional(),
+    groupId: z.uuid(),
   })
   .superRefine((value, ctx) => {
     if ((value.type === "LINK" || value.type === "FILE") && !value.url) {
@@ -41,7 +41,7 @@ export const updateResourceSchema = z
 export const listResourcesQuery = z.object({
   type: resourceType.optional(),
   courseName: z.string().trim().max(120).optional(),
-  groupId: z.uuid().optional(),
+  groupId: z.uuid(),
   search: z.string().trim().max(100).optional(),
 });
 
@@ -53,7 +53,7 @@ export const uploadResourceSchema = z.object({
   courseName: z.string().trim().max(120).optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
   isPublic: z.boolean().default(true),
-  groupId: z.uuid().optional(),
+  groupId: z.uuid(),
 });
 
 export type CreateResourceInput = z.infer<typeof createResourceSchema>;

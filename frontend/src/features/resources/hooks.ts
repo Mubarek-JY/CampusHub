@@ -7,10 +7,10 @@ export const resourceKeys = {
   list: (filters: Record<string, string>) => [...resourceKeys.all, filters] as const,
 };
 
-export function useResources(filters: { type?: string; search?: string }) {
+export function useResources(filters: { groupId: string; type?: string; search?: string }) {
   return useQuery({
     queryKey: resourceKeys.list(filters),
-    queryFn: () => getResources({ type: filters.type as ResourceType | undefined, search: filters.search }),
+    queryFn: () => getResources({ groupId: filters.groupId, type: filters.type as ResourceType | undefined, search: filters.search }),
   });
 }
 

@@ -64,7 +64,7 @@ export type Resource = {
 };
 export type CreateResourceInput = {
   title: string; description?: string; type: ResourceType; url?: string; content?: string;
-  courseName?: string; tags?: string[]; isPublic?: boolean; groupId?: string;
+  courseName?: string; tags?: string[]; isPublic?: boolean; groupId: string;
 };
 export type UpdateResourceInput = Partial<Pick<CreateResourceInput, 'title' | 'description' | 'url' | 'content' | 'courseName' | 'tags' | 'isPublic'>>;
 export type Message = { id: string; content: string; senderId: string; groupId?: string | null; recipientId?: string | null; createdAt: string; sender: Pick<User, 'id' | 'firstName' | 'lastName' | 'avatarUrl'>; recipient?: Pick<User, 'id' | 'firstName' | 'lastName' | 'avatarUrl'> | null };

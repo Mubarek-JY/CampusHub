@@ -15,7 +15,7 @@ export function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => { document.documentElement.classList.toggle('dark', dark); localStorage.setItem('campushub.theme', dark ? 'dark' : 'light'); }, [dark]);
   const logout = async () => { await signOut(); toast('You have been signed out.'); navigate('/login', { replace: true }); };
-  const navLinks = [{ to: '/app', label: 'Overview' }, { to: '/app/resources', label: 'Resources' }, { to: '/app/messages', label: 'Messages' }, { to: '/app/calendar', label: 'Calendar' }];
+  const navLinks = [{ to: '/app', label: 'Dashboard' }, { to: '/app/messages', label: 'Messages' }, { to: '/app/calendar', label: 'Calendar' }];
   return <div className="app-shell flex min-h-screen text-slate-900 dark:text-slate-100">
     <Sidebar />
     <div className="flex min-w-0 flex-1 flex-col">

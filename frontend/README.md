@@ -37,7 +37,7 @@ The Vite development server is configured for `http://localhost:5173`. The backe
 - **Dashboard:** group cards, create-group dialog, and join-by-code dialog.
 - **Group workspace:** Tasks (three-column Kanban board, drag/drop, mobile status selector, assignee filter, edit/create/delete, priority and overdue indicators), Members (owner role changes and role-aware member removal), and Settings (invite code, leave, owner-only deletion).
 - **Profile:** view and update profile fields.
-- **Resources:** Search and browse visible resources, share links/files/notes, upload files up to 10 MB, rate resources, and delete resources you uploaded.
+- **Resources:** Each group has a Resources tab for sharing links, notes, and files up to 10 MB, with search, ratings, and deletion of your own resources.
 - **Messages:** Group conversation history and message sending.
 - **Calendar:** Personal and group event creation, display, and deletion.
 

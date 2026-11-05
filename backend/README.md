@@ -86,9 +86,9 @@ Files can be uploaded as multipart form data and are stored locally under `uploa
 
 | Method | Path | Notes |
 | --- | --- | --- |
-| POST | `/` | Create a resource; optional `groupId`, `tags`, `courseName`, and `isPublic` |
-| POST | `/upload` | Upload a file with multipart field `file` and resource metadata |
-| GET | `/` | List visible resources; accepts `type`, `courseName`, `groupId`, and `search` |
+| POST | `/` | Create a group resource with `groupId`, `tags`, `courseName`, and `isPublic` |
+| POST | `/upload` | Upload a file to a group with multipart field `file` and resource metadata |
+| GET | `/` | List group resources; accepts `groupId`, `type`, `courseName`, and `search` |
 | GET | `/:resourceId` | Get a visible resource |
 | PATCH | `/:resourceId` | Uploader only |
 | DELETE | `/:resourceId` | Uploader only |
